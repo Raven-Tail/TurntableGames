@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>TurntableGames</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src-modules\Core\src\Core.App\Core.App.csproj" />
     <ProjectReference Include="..\TurntableGames\TurntableGames.csproj" />
   </ItemGroup>
 

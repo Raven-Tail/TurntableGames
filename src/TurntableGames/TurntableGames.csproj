@@ -2,10 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>TurntableGames</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Mediator.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src-modules\Core\src\Core\Core.csproj" />
   </ItemGroup>
 
 </Project>

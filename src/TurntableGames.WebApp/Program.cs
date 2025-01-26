@@ -1,8 +1,26 @@
-var builder = WebApplication.CreateBuilder(args);
+using Core.Common.Behaviors;
+using Mediator;
+using Scalar.AspNetCore;
+using Serilog;
+using TurntableGames.CringyCards.Requests;
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateLogger();
+
+var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
+var configuration = builder.Configuration;
+
+// Common
+services.AddSerilog();
+services.AddOpenApi();
+
+// Mediator
+services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LogRequestBehavior<,>));
+services.AddScoped(typeof(IPipelineBehavior<,>), typeof(RunnerBehavior<,>));
+services.AddMediator(options => options.ServiceLifetime = ServiceLifetime.Scoped);
 
 var app = builder.Build();
 
@@ -10,32 +28,17 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference("/docs");
 }
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+// Cringy Game
+var grp = app.MapGroup("/api/cringy-game");
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+grp.MapPost("", (CreateGame request, ISender sender) => sender.Send(request).ToOk());
 
-app.Run();
+// todo: add other methods related to the requests and implement their command handlers with a throw new not implemented exception.
+// we just need to make sure all commands are executed to the handlers
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+await app.RunAsync();
