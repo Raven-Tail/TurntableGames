@@ -2,7 +2,6 @@ using Core.Common.Behaviors;
 using Mediator;
 using Scalar.AspNetCore;
 using Serilog;
-using TurntableGames.CringyCards.Requests;
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
@@ -20,7 +19,8 @@ services.AddOpenApi();
 // Mediator
 services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LogRequestBehavior<,>));
 services.AddScoped(typeof(IPipelineBehavior<,>), typeof(RunnerBehavior<,>));
-services.AddMediator(options => options.ServiceLifetime = ServiceLifetime.Scoped);
+services.AddBlackwing();
+services.AddBlackwingHandlers();
 
 var app = builder.Build();
 
@@ -36,7 +36,7 @@ app.UseHttpsRedirection();
 // Cringy Game
 var grp = app.MapGroup("/api/cringy-game");
 
-grp.MapPost("", (CreateGame request, ISender sender) => sender.Send(request).ToOk());
+//grp.MapPost("", (CreateGame request, ISender sender) => sender.Send(request).ToOk());
 
 // todo: add other methods related to the requests and implement their command handlers with a throw new not implemented exception.
 // we just need to make sure all commands are executed to the handlers

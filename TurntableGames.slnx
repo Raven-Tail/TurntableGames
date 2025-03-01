@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src-core/">
+    <Project Path="src-modules/Core/src/Core.App/Core.App.csproj" />
+    <Project Path="src-modules/Core/src/Core.Blazor/Core.Blazor.csproj" />
+    <Project Path="src-modules/Core/src/Core.Web/Core.Web.csproj" />
+    <Project Path="src-modules/Core/src/Core/Core.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/TurntableGames.App/TurntableGames.App.csproj" />
+    <Project Path="src/TurntableGames.WebApp/TurntableGames.WebApp.csproj" />
+    <Project Path="src/TurntableGames/TurntableGames.csproj" />
+  </Folder>
+</Solution>
